@@ -1,23 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <img src={logo} className="App-logo" alt="logo" />
+      <h2>React Devs</h2>
+      <div>
+        <EveryUser></EveryUser>
+      </div>
+    </div>
+  );
+}
+
+function EveryUser() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch("https://randomuser.me/api/?results=25")
+      // fetch('https://jsonplaceholder.typicode.com/users')
+      .then((response) => response.json())
+      .then((data) => setUsers(data.results));
+  }, []);
+
+  return (
+    <div className="all-users">
+      {users.map((user) => (
+        <User
+          name={user.name.first}
+          country={user.location.country}
+          phone={user.phone}
+          img={user.picture.large}
+        ></User>
+      ))}
+    </div>
+  );
+}
+
+function User(props) {
+  return (
+    <div className="profile-box">
+      <div className="circle">
+        <div>
+          <img src={props.img} alt="" />
+        </div>
+      </div>
+
+      <div className="infos">
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          <strong>Name :</strong> {props.name}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <p>
+          <strong>Country :</strong> {props.country}
+        </p>
+        <p>
+          <strong>Phone :</strong> {props.phone}
+        </p>
+      </div>
     </div>
   );
 }
